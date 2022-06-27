@@ -6,5 +6,6 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
-  get '/players', action: :players, controller: :cartas_contra_humanidade_rules
+  get '/players', action: :wtf_meo, controller: :cartas_contra_humanidade_rules
+  post '/players', action: :players, controller: :cartas_contra_humanidade_rules
 end
