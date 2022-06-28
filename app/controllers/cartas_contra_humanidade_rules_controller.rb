@@ -1,20 +1,21 @@
 require 'json'
 class CartasContraHumanidadeRulesController < ApplicationController
-  before_action :set_session_info, only: [:players]
-  before_action :set_redis, only: %i[players wtf_meo]
+  before_action :set_session_info, only: [:add_players]
+  before_action :set_redis, only: %i[add_players players_list]
 
-  def wtf_meo
-    players = @redis.get('players')
+  def players_list
+    players = JSON.parse(@redis.get('players')) if @redis.get('players')
 
-    players = [] unless players
+    players ||= []
 
     render json: players
+    broadcast(players)
   end
 
-  def players
+  def add_players
     @redis.set('players', @players.to_json)
 
-    current_players = @redis.get('players')
+    current_players = JSON.parse(@redis.get('players'))
 
     render json: current_players
     broadcast(current_players)
@@ -23,7 +24,7 @@ class CartasContraHumanidadeRulesController < ApplicationController
   private
 
   def set_session_info
-    @players = params[:currentPlayers]
+    @players = params[:players]
   end
 
   def set_redis
