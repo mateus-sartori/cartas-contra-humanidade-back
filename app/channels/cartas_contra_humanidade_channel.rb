@@ -18,17 +18,19 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
     Player.new.index
   end
 
-  def put_player_in_room(data)
-    Player.new.insert_in_room(data['player_id'], data['room_id'])
-  end
-
   # Rooms Rules
 
   def create_room(data)
-    Room.new.create(data['room'])
+    room = { host: data['host'], id: data['id'] }
+
+    Room.new.create(room)
   end
 
   def list_rooms
     Room.new.index
+  end
+
+  def put_player_in_room(data)
+    Room.new.insert_in_room(data['player'], data['room_id'], data['players'])
   end
 end

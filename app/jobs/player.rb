@@ -21,17 +21,4 @@ class Player
 
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', data
   end
-
-  def insert_in_room(player_id, room_id)
-
-    @players.map do |player|
-      player['room_id'] = room_id['id'] if player['id'] == player_id
-    end
-
-    puts @players
-
-    @redis.set('players', @players.to_json)
-
-    CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @players
-  end
 end

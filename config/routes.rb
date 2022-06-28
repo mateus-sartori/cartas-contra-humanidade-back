@@ -5,7 +5,4 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   mount ActionCable.server => '/cable'
-
-  get '/players', action: :players_list, controller: :cartas_contra_humanidade_rules
-  post '/players', action: :add_players, controller: :cartas_contra_humanidade_rules
 end
