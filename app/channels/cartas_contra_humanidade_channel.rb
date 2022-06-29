@@ -30,7 +30,15 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
     Room.new.index
   end
 
+  def delete_room(data)
+    Room.new.delete(data['room_id'])
+  end
+
+  def remove_player_from_room(data)
+    Room.new.remove_player(data['player'], data['room_id'])
+  end
+
   def put_player_in_room(data)
-    Room.new.insert_in_room(data['player'], data['room_id'], data['players'])
+    Room.new.insert_player(data['player'], data['room_id'], data['players'])
   end
 end
