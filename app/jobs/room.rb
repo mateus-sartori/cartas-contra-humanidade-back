@@ -10,6 +10,10 @@ class Room
   end
 
   def index
+    @rooms = @rooms.reject { |room| room['players'].blank? }
+
+    @redis.set('rooms', @rooms.to_json)
+
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel',
                                                { rooms: @rooms, action: 'list_rooms' }
   end
