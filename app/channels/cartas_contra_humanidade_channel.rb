@@ -18,6 +18,10 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
     Player.new.index
   end
 
+  def remove_player_from_session(data)
+    Player.new.remove(data['ip'])
+  end
+
   # Rooms Rules
 
   def create_room(data)

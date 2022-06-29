@@ -21,4 +21,12 @@ class Player
 
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', data
   end
+
+  def remove(player_ip)
+    @players = @players.reject { |player| player['ip'] == player_ip }
+
+    @redis.set('players', @players.to_json)
+
+    CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @players
+  end
 end
