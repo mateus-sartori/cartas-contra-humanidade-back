@@ -1,10 +1,17 @@
 # a
 class CartasContraHumanidadeChannel < ApplicationCable::Channel
+  attr_reader :session
+
   def subscribed
+    @session = params[:session]
+
     stream_for 'cartas_contra_humanidade_channel'
   end
 
   def unsubscribed
+    Player.new.remove(@session)
+    list_players
+
     stop_stream_for 'cartas_contra_humanidade_channel'
   end
 
@@ -16,10 +23,6 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
 
   def list_players
     Player.new.index
-  end
-
-  def remove_player_from_session(data)
-    Player.new.remove(data['ip'])
   end
 
   # Rooms Rules
