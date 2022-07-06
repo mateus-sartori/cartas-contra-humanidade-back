@@ -34,8 +34,24 @@ class Room
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @rooms
   end
 
+  def delete_by_player_host_disconnect(player_host)
+    @rooms = @rooms.reject { |room| room['host'] == player_host }
+
+    @redis.set('rooms', @rooms.to_json)
+
+    CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @rooms
+  end
+
   def remove_player(player, room_id)
     @rooms.map { |room| room['players'].delete(player) if room['id'] == room_id && room['players'].include?(player) }
+
+    @redis.set('rooms', @rooms.to_json)
+
+    CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @rooms
+  end
+
+  def remove_player_by_disconnect(player_id)
+    @rooms.map { |room| room['players'].delete_if { |i| i['id'] == player_id } }
 
     @redis.set('rooms', @rooms.to_json)
 

@@ -9,8 +9,21 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
+    # Remove jogador da sessão
     Player.new.remove(@session)
+
+    # Chamada para atualizar lista de jogadores
     list_players
+
+    # Deleta a sala se host sair e sala, se existir
+    disconnect_by_player_host(@session)
+
+
+    # Deleta jogador da sala caso disconecte da sala
+    Room.new.remove_player_by_disconnect(@session)
+
+    # Chamada para atualizar a lista de salas
+    list_rooms
 
     stop_stream_for 'cartas_contra_humanidade_channel'
   end
@@ -28,7 +41,7 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
   # Rooms Rules
 
   def create_room(data)
-    room = { host: data['host'], id: data['id'] }
+    room = { host: data['host'], host_name: data['hostName'], id: data['id'] }
 
     Room.new.create(room)
   end
@@ -47,5 +60,9 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
 
   def put_player_in_room(data)
     Room.new.insert_player(data['player'], data['room_id'], data['players'])
+  end
+
+  def disconnect_by_player_host(data)
+    Room.new.delete_by_player_host_disconnect(data)
   end
 end
