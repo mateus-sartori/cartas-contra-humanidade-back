@@ -18,7 +18,6 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
     # Deleta a sala se host sair e sala, se existir
     disconnect_by_player_host(@session)
 
-
     # Deleta jogador da sala caso disconecte da sala
     Room.new.remove_player_by_disconnect(@session)
 
@@ -64,5 +63,9 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
 
   def disconnect_by_player_host(data)
     Room.new.delete_by_player_host_disconnect(data)
+  end
+
+  def start_game(data)
+    Room.new.start_game(data)
   end
 end

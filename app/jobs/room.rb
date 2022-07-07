@@ -68,4 +68,8 @@ class Room
 
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @rooms
   end
+
+  def start_game(data)
+    CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', data
+  end
 end
