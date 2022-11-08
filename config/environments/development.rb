@@ -65,5 +65,5 @@ Rails.application.configure do
   config.action_cable.url = 'ws://localhost:3000/cable'
   config.action_cable.allowed_request_origins = [%r{http://*}, %r{https://*}]
 
-  config.cache_store = :redis_cache_store, { url: 'redis://localhost:6379/1' }
+  config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
 end

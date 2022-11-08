@@ -3,10 +3,10 @@
 # A control for Players
 class Player
   def initialize
-    @redis = Redis.new(url: 'redis://localhost:6379/1')
+    @redis = Rails.cache
 
     @players = []
-    @players = JSON.parse(@redis.get('players')) if @redis.get('players')
+    @players = JSON.parse(@redis.read('players')) if @redis.read('players')
   end
 
   def index
@@ -17,7 +17,7 @@ class Player
   def create(data)
     @players << data
 
-    @redis.set('players', @players.to_json)
+    @redis.write('players', @players.to_json)
 
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', data
   end
@@ -25,7 +25,7 @@ class Player
   def remove(session)
     @players = @players.reject { |player| player['id'] == session }
 
-    @redis.set('players', @players.to_json)
+    @redis.write('players', @players.to_json)
 
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', @players
   end

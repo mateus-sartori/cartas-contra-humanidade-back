@@ -1,0 +1,37 @@
+version: "3.0"
+services:
+  db:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5433:5432"
+
+  redis:
+    image: redis:latest
+    command: redis-server
+    volumes:
+      - redis:/data
+    ports:
+      - 6379:6379
+
+  app:
+    build: .
+    env_file: .env
+    command: bash -c "rm -f tmp/pids/server.pid && bundle && bundle exec rails s -p 3000 -b '0.0.0.0' -e ${RAILS_ENV}"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+
+#Docker Networks
+volumes:
+  redis:
+  pgdata:
