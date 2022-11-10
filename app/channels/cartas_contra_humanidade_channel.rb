@@ -40,7 +40,7 @@ class CartasContraHumanidadeChannel < ApplicationCable::Channel
   # Rooms Rules
 
   def create_room(data)
-    room = { host: data['host'], host_name: data['hostName'], id: data['id'] }
+    room = { host: data['host'], host_name: data['hostName'], id: data['id'], status: data['status'] }
 
     Room.new.create(room)
   end

@@ -70,6 +70,10 @@ class Room
   end
 
   def start_game(data)
+    @rooms = @rooms.each { |room| room['status'] = 'started' if room['id'] == data['session'] }
+
+    @redis.write('rooms', @rooms.to_json)
+
     CartasContraHumanidadeChannel.broadcast_to 'cartas_contra_humanidade_channel', data
   end
 end
