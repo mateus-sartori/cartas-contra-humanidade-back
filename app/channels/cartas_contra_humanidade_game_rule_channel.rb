@@ -34,7 +34,7 @@ class CartasContraHumanidadeGameRuleChannel < ApplicationCable::Channel
     white_cards = JSON.parse(File.read('app/channels/white_cards.json'))
 
     players.each do |player|
-      random_cards = white_cards.sample(10)
+      random_cards = white_cards.sample(5)
       white_cards -= random_cards
 
       info_player = {
