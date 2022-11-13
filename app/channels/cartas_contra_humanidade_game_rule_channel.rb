@@ -62,4 +62,16 @@ class CartasContraHumanidadeGameRuleChannel < ApplicationCable::Channel
     CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
                                                        { data:, action: 'update_cards_in_table' }
   end
+
+  def reveal_card_in_table(data)
+    cards_in_table = data['cardsInTable']
+    card = data['card']
+
+    cards_in_table.map do |card_in_table|
+      card_in_table['revealed'] = true if card_in_table['text'] == card['text']
+    end
+
+    CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
+                                                       { data: cards_in_table, action: 'reveal_card_in_table' }
+  end
 end
