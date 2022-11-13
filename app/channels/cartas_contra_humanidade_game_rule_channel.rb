@@ -57,4 +57,9 @@ class CartasContraHumanidadeGameRuleChannel < ApplicationCable::Channel
     CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
                                                        { data: data['selectedBlackCard'], action: 'play_black_card' }
   end
+
+  def update_cards_in_table(data)
+    CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
+                                                       { data:, action: 'update_cards_in_table' }
+  end
 end
