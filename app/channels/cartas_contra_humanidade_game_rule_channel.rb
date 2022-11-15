@@ -75,6 +75,12 @@ class CartasContraHumanidadeGameRuleChannel < ApplicationCable::Channel
                                                        { data: cards_in_table, action: 'reveal_card_in_table' }
   end
 
+  def shuffle_cards_in_table(data)
+    cards = data['cardsInTable']
+    CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
+                                                       { data: cards.shuffle, action: 'shuffle_cards_in_table' }
+  end
+
   def update_room(data)
     players = data['players']
     current_player = data['currentPlayer']
