@@ -74,4 +74,30 @@ class CartasContraHumanidadeGameRuleChannel < ApplicationCable::Channel
     CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
                                                        { data: cards_in_table, action: 'reveal_card_in_table' }
   end
+
+  def update_room(data)
+    players = data['players']
+    current_player = data['currentPlayer']
+    card = data['card']
+
+    players.each do |player|
+      player['pending'] = false if player['id'] == current_player['id']
+      player['referralCard'] = card if player['id'] == current_player['id'] && card.present?
+    end
+
+    CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
+                                                       { data: players, action: 'update_room' }
+  end
+
+  def winner_player(data)
+    player = {
+      id: data['id'],
+      name: data['name'],
+      card: data['referralCard'],
+      reveal: true,
+    }
+
+    CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
+                                                       { data: player, action: 'winner_player' }
+  end
 end
