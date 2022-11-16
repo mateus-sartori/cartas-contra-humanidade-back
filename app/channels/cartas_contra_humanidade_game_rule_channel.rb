@@ -63,6 +63,11 @@ class CartasContraHumanidadeGameRuleChannel < ApplicationCable::Channel
                                                        { data:, action: 'update_cards_in_table' }
   end
 
+  def buy_white_card(data)
+    CartasContraHumanidadeGameRuleChannel.broadcast_to @session,
+                                                       { data:, action: 'buy_white_card' }
+  end
+
   def reveal_card_in_table(data)
     cards_in_table = data['cardsInTable']
     card = data['card']
